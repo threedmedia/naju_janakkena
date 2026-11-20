@@ -1,0 +1,11 @@
+자나깨나 유튜브 플레이어 오류 153 안내
+
+원인: 로컬 file:// 환경에서는 YouTube가 요구하는 HTTP Referer를 전송하지 못할 수 있습니다.
+해결: 전체 프로젝트를 Netlify에 배포하고 https://...netlify.app 주소에서 재생합니다.
+
+이 개선 버전은 file:// 로 실행하면 임베드 대신 안내와 유튜브 직접 보기 링크를 보여줍니다.
+https:// 사이트에서는 YouTube iframe을 표시하며 referrerpolicy=strict-origin-when-cross-origin을 지정합니다.
+
+일부 공개 영상은 임베드가 허용되면 재생할 수 있지만, 외부 삽입 금지, 연령 제한, 브라우저의 개인정보 보호 설정 등에 따라 재생이 차단될 수 있습니다.
+
+확인 영상: https://youtu.be/N840CKxs1XA

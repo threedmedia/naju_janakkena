@@ -6,7 +6,7 @@
   const AUTH_API = '/.netlify/functions/auth';
   const UPLOAD_API = '/.netlify/functions/upload';
   const AI_API = '/.netlify/functions/interpret';
-  const LOCAL_KEY = 'janakkena-demo-content-v2';
+  const LOCAL_KEY = 'janakkena-demo-content-v3';
   const CAT = {heritage:'NAJU HERITAGE', fashion:'FASHION EDITION', lifestyle:'LIFESTYLE', arttoy:'ART TOY'};
   let current = {brandTitle:'시간을 품은 나주, 오늘의 명작이 되다.',brandSubtitle:'',youtubeUrl:'',products:[]};
   let activeCategory = 'all', activeProduct = null, selectedProductId = null;
@@ -72,9 +72,44 @@
       return /^[a-zA-Z0-9_-]{11}$/.test(id)?id:'';
     }catch{return ''}
   }
-  function renderVideo(){const mount=$('videoMount');mount.replaceChildren();let id=youtubeId(current.youtubeUrl);
-    if(id){const iframe=document.createElement('iframe');iframe.src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0';iframe.title='자나깨나 브랜드 영상';iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.referrerPolicy='strict-origin-when-cross-origin';iframe.allowFullscreen=true;iframe.loading='lazy';mount.append(iframe)}
-    else{const placeholder=document.createElement('div');placeholder.className='placeholder';const icon=document.createElement('div');icon.className='placeholder-play';icon.textContent='▶';const name=document.createElement('div');name.className='video-placeholder-title';name.textContent='THE STORIES WE CARRY';const sub=document.createElement('small');sub.textContent='브랜드 필름이 곧 공개됩니다';placeholder.append(icon,name,sub);mount.append(placeholder)}
+  function renderVideo(){
+    const mount=$('videoMount');mount.replaceChildren();
+    const id=youtubeId(current.youtubeUrl);
+    let external=$('videoExternalLink');
+    if(!external){
+      external=document.createElement('a');external.id='videoExternalLink';
+      external.target='_blank';external.rel='noopener noreferrer';
+      external.style.cssText='display:block;margin:12px auto 0;text-align:center;color:#8a6b42;font-size:12px;text-decoration:underline;text-underline-offset:4px';
+      mount.insertAdjacentElement('afterend',external);
+    }
+    external.hidden=!id;external.style.display=id?'block':'none';
+    if(id){
+      external.href='https://www.youtube.com/watch?v='+id;
+      external.textContent='영상이 재생되지 않나요? YouTube에서 직접 보기 ↗';
+      if(location.protocol==='file:'){
+        // A file:// page cannot send the HTTP Referer expected by YouTube (player error 153).
+        const placeholder=document.createElement('div');placeholder.className='placeholder';
+        const icon=document.createElement('div');icon.className='placeholder-play';icon.textContent='▶';
+        const title=document.createElement('div');title.className='video-placeholder-title';title.textContent='JANAKKENA BRAND FILM';
+        const note=document.createElement('small');note.textContent='HTML 파일 직접 열기에서는 YouTube 오류 153이 발생할 수 있습니다. Netlify에 배포하면 웹사이트 안에서 재생됩니다.';
+        note.style.cssText='max-width:440px;line-height:1.7;text-align:center';
+        placeholder.append(icon,title,note);mount.append(placeholder);
+      }else{
+        const iframe=document.createElement('iframe');
+        iframe.src='https://www.youtube.com/embed/'+id+'?rel=0';
+        iframe.title='자나깨나 브랜드 영상';
+        iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.referrerPolicy='strict-origin-when-cross-origin';
+        iframe.allowFullscreen=true;iframe.loading='lazy';
+        mount.append(iframe);
+      }
+    }else{
+      const placeholder=document.createElement('div');placeholder.className='placeholder';
+      const icon=document.createElement('div');icon.className='placeholder-play';icon.textContent='▶';
+      const name=document.createElement('div');name.className='video-placeholder-title';name.textContent='THE STORIES WE CARRY';
+      const sub=document.createElement('small');sub.textContent='브랜드 필름이 곧 공개됩니다';
+      placeholder.append(icon,name,sub);mount.append(placeholder);
+    }
   }
   function lockScroll(){document.body.classList.add('modal-open')}
   function unlockScroll(){if($('productModal').hidden&&!$('adminDrawer').classList.contains('is-open'))document.body.classList.remove('modal-open')}

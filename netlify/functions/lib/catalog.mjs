@@ -4,7 +4,7 @@ import { safeImage,validYoutubeUrl } from './utils.mjs';
 const defaultCatalog = {
   "brandTitle": "시간을 품은 나주, 오늘의 명작이 되다.",
   "brandSubtitle": "자랑스런 나주알기 · 나주의 보물과 이야기를 현대적인 오브제로 재창작하는 디지털 럭셔리 컬렉션",
-  "youtubeUrl": "",
+  "youtubeUrl": "https://youtu.be/N840CKxs1XA",
   "products": [
     {
       "id": "golden-boat",
